@@ -1,26 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {Component} from 'react'
+import Search from './components/Search'
+import ImageList from './components/ImageList'
+import api from './api/api'
+class App extends Component {
+    state={
+        images: []
+    }
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    
+
+    
+    handleSearchTerm= async(term)=>{
+            const response = await api.get("/search/photos",{
+                params: { query: term, per_page: 30, page: Math.floor(Math.random() * 100) + 1 }
+            });
+
+            this.setState({ images: response.data.results });
+        
+        }
+
+        
+
+    render(){
+        return(
+            <div className="ui container" style={{marginTop: "10px"}}>
+                <Search search={this.handleSearchTerm}/>
+                <ImageList images={this.state.images}/>
+            </div>
+        )
+    }
 }
 
-export default App;
+export default App
